@@ -1,29 +1,72 @@
-# Create T3 App
+# Virtual Machine Runner
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A sleek, modern web dashboard to manage your virtual machine instances on Excloud. Built with Next.js 15, Shadcn UI, and Tailwind CSS.
 
-## What's next? How do I make an app with this?
+## 🚀 Features
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+- **Secure Login:** Access control using hardcoded credentials stored in environment variables.
+- **VM Management:** Start, Stop, and Restart your VM instances with a single click.
+- **Real-time Status:** View the current lifecycle state (Running, Stopped, etc.) of your VM.
+- **Credentials Persistence:** VM ID, Bearer Token, and Login credentials are saved in your browser for a seamless experience.
+- **Session Security:** 24-hour session persistence using secure cookies.
+- **Modern UI:** Responsive design with a clean aesthetic and intuitive controls.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## 🛠️ Tech Stack
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components:** [Shadcn UI](https://ui.shadcn.com/)
+- **Icons:** [Lucide React](https://lucide.dev/)
+- **Forms & Validation:** [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
+- **Notifications:** [Sonner](https://sonner.stevenly.me/)
 
-## Learn More
+## ⚙️ Getting Started
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### Prerequisites
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+- Node.js 18+
+- pnpm (recommended) or npm/yarn
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+### Installation
 
-## How do I deploy this?
+1. **Clone the repository:**
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+   ```bash
+   git clone https://github.com/raghavdwd/vm-runner.git
+   cd vm-runner
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Set up environment variables:**
+   Create a `.env` file in the root directory and add your login credentials:
+
+   ```env
+   APP_USERNAME="your_app_username"
+   APP_PASSWORD="your_app_password"
+   ```
+
+4. **Run the development server:**
+   ```bash
+   pnpm dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 🖥️ Usage
+
+1. **Login:** Use the credentials configured in your `.env` file.
+2. **Setup:** Enter your **VM ID** and your Excloud **Bearer Token**.
+3. **Control:** Use the action buttons to manage your VM. The status will update automatically after each action.
+4. **Refresh:** Use the "Refresh" button next to the status badge to pull the latest state manually.
+
+## 🔒 Security Note
+
+This application stores your VM ID and Bearer Token in `localStorage`. For production use, ensure you are accessing the dashboard over HTTPS. The authentication cookie is set as `httpOnly` to prevent XSS attacks.
+
+---
+
+Built for managing VMs with speed and simplicity.

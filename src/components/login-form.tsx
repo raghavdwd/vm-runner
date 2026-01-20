@@ -76,10 +76,10 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">
-            Virtual Machine runner
+            Excloud Virtual Machine runner
           </CardTitle>
           <CardDescription>
-            Enter your credentials to manage your VMs
+            Enter your app credentials to manage your VMs
           </CardDescription>
         </CardHeader>
         <CardContent>
