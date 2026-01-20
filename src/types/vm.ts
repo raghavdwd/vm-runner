@@ -1,9 +1,11 @@
 export type VMAction = "start" | "stop" | "restart";
 
 export interface VMStatusResponse {
+  state?: string;
   status?: string;
   data?: {
-    status: string;
+    status?: string;
+    state?: string;
   };
 }
 

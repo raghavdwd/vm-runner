@@ -76,8 +76,13 @@ export default function VMDashboard() {
 
       if (response.ok) {
         const data = (await response.json()) as VMStatusResponse;
-        // Handle potential different response structures
-        const newStatus = data.status ?? data.data?.status ?? "Unknown";
+        // Handle potential different response structures (preferring 'state' based on actual API response)
+        const newStatus =
+          data.state ??
+          data.status ??
+          data.data?.state ??
+          data.data?.status ??
+          "Unknown";
         setStatus(newStatus);
       } else {
         setStatus("Error");
@@ -107,6 +112,25 @@ export default function VMDashboard() {
       return;
     }
 
+    // UX Improvement: Check state before acting to avoid redundant API calls
+    const isRunning =
+      status?.toLowerCase() === "running" || status?.toLowerCase() === "active";
+    const isStopped =
+      status?.toLowerCase() === "stopped" || status?.toLowerCase() === "off";
+
+    if (action === "start" && isRunning) {
+      toast.info("VM is already running");
+      return;
+    }
+    if (action === "stop" && isStopped) {
+      toast.info("VM is already stopped");
+      return;
+    }
+    if (action === "restart" && isStopped) {
+      toast.info("VM is stopped. Use 'Start' instead.");
+      return;
+    }
+
     setLoading(action);
     try {
       // Using direct fetch. Note: Real production apps might need API keys or proxy through server to avoid CORS
@@ -125,8 +149,10 @@ export default function VMDashboard() {
 
       if (response.ok) {
         toast.success(`VM ${action}ed successfully`);
-        // Refresh status after a short delay to allow transition
-        setTimeout(() => void fetchStatus(), 2000);
+        // Refresh status immediately and after a few seconds to catch the state change
+        void fetchStatus();
+        setTimeout(() => void fetchStatus(), 3000);
+        setTimeout(() => void fetchStatus(), 10000);
       } else {
         const errorData = (await response.json().catch(() => ({}))) as {
           message?: string;
@@ -264,25 +290,55 @@ export default function VMDashboard() {
           <div className="grid grid-cols-1 gap-4 pt-4 md:grid-cols-3">
             <Button
               size="lg"
-              className="h-24 gap-2 bg-emerald-500 text-lg text-white hover:bg-emerald-600"
+              className={`h-24 gap-2 text-lg transition-all ${
+                status?.toLowerCase() === "running" ||
+                status?.toLowerCase() === "active"
+                  ? "bg-slate-100 text-slate-400 border-slate-200 hover:bg-slate-200"
+                  : "bg-emerald-500 text-white hover:bg-emerald-600 shadow-sm active:scale-95"
+              }`}
               onClick={() => performAction("start")}
               disabled={loading !== null}
             >
-              <Play className="h-6 w-6 fill-current" />
+              <Play
+                className={`h-6 w-6 ${
+                  status?.toLowerCase() === "running" ||
+                  status?.toLowerCase() === "active"
+                    ? "fill-slate-300"
+                    : "fill-current"
+                }`}
+              />
               {loading === "start" ? "Starting..." : "Start"}
             </Button>
             <Button
               size="lg"
-              className="h-24 gap-2 bg-rose-500 text-lg text-white hover:bg-rose-600"
+              className={`h-24 gap-2 text-lg transition-all ${
+                status?.toLowerCase() === "stopped" ||
+                status?.toLowerCase() === "off"
+                  ? "bg-slate-100 text-slate-400 border-slate-200 hover:bg-slate-200"
+                  : "bg-rose-500 text-white hover:bg-rose-600 shadow-sm active:scale-95"
+              }`}
               onClick={() => performAction("stop")}
               disabled={loading !== null}
             >
-              <Square className="h-6 w-6 fill-current" />
+              <Square
+                className={`h-6 w-6 ${
+                  status?.toLowerCase() === "stopped" ||
+                  status?.toLowerCase() === "off"
+                    ? "fill-slate-300"
+                    : "fill-current"
+                }`}
+              />
               {loading === "stop" ? "Stopping..." : "Stop"}
             </Button>
             <Button
               size="lg"
-              className="h-24 gap-2 bg-slate-900 text-lg text-white hover:bg-slate-800"
+              className={`h-24 gap-2 text-lg transition-all ${
+                !status ||
+                status.toLowerCase() === "stopped" ||
+                status.toLowerCase() === "off"
+                  ? "bg-slate-100 text-slate-400 border-slate-200 hover:bg-slate-200"
+                  : "bg-slate-900 text-white hover:bg-slate-800 shadow-sm active:scale-95"
+              }`}
               onClick={() => performAction("restart")}
               disabled={loading !== null}
             >
