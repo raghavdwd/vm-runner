@@ -131,7 +131,10 @@ export default function VMDashboard() {
         const errorData = (await response.json().catch(() => ({}))) as {
           message?: string;
         };
-        toast.error(errorData.message ?? `Failed to ${action} VM`);
+        toast.error(
+          errorData.message ??
+            `Failed to ${action} VM. May be vm is already in desired state?`,
+        );
       }
     } catch {
       toast.error(`Error connecting to compute service`);
@@ -150,25 +153,27 @@ export default function VMDashboard() {
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
       <Card className="w-full max-w-2xl">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7">
-          <div>
-            <CardTitle className="text-2xl font-bold text-blue-600">
+          <div className="flex flex-col">
+            <CardTitle className="text-xl font-bold text-blue-600 sm:text-2xl">
               Virtual Machine runner
             </CardTitle>
-            <CardDescription>Manage your VM instances securely</CardDescription>
+            <CardDescription className="text-xs sm:text-sm">
+              Manage your VM instances securely
+            </CardDescription>
           </div>
           <Button variant="ghost" size="icon" onClick={logout} title="Logout">
             <LogOut className="h-5 w-5" />
           </Button>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex items-center justify-between rounded-lg border bg-blue-50/50 p-4">
+          <div className="flex flex-col gap-4 rounded-lg border bg-blue-50/50 p-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
                 <Activity className="h-5 w-5" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-blue-900">VM Status</p>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {status ? (
                     <Badge
                       variant={
@@ -193,7 +198,7 @@ export default function VMDashboard() {
                       {status.toUpperCase()}
                     </Badge>
                   ) : (
-                    <span className="text-muted-foreground text-sm">
+                    <span className="text-muted-foreground truncate text-sm italic">
                       Enter credentials to see status
                     </span>
                   )}
@@ -205,7 +210,7 @@ export default function VMDashboard() {
               size="sm"
               onClick={() => void fetchStatus()}
               disabled={fetchingStatus || !vmId || !token}
-              className="gap-2"
+              className="w-full gap-2 sm:w-auto"
             >
               <RefreshCw
                 className={`h-4 w-4 ${fetchingStatus ? "animate-spin" : ""}`}

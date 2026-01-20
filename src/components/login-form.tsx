@@ -75,10 +75,10 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">
+          <CardTitle className="text-xl font-bold sm:text-2xl">
             Excloud Virtual Machine runner
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-sm">
             Enter your app credentials to manage your VMs
           </CardDescription>
         </CardHeader>
